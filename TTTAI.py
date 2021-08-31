@@ -1,46 +1,44 @@
 import copy
 
 
-X ="X"
-O ="O"
+X = "X"
+O = "O"
 M = None
 
 
 def ini_board():
 
-    board = [[M, M, M],
-             [M, M, M],
-             [M, M, M]]
+    board = [[M, M, M], [M, M, M], [M, M, M]]
     return board
 
 
 def player(board):
-    i=0
-    j=0
-    k=0
-    f=0 #Not Used
-    while i<3:
-        j=0
-        while j<3:
+    i = 0
+    j = 0
+    k = 0
+    f = 0  # Not Used
+    while i < 3:
+        j = 0
+        while j < 3:
             if board[i][j] == M:
                 f += 1
             else:
                 k += 1
             j += 1
-        i +=1
-    if k%2==0:
+        i += 1
+    if k % 2 == 0:
         return X
     else:
         return O
 
 
 def actions(board):
-    i=0
-    j=0
+    i = 0
+    j = 0
     actionSet = []
-    while i<3:
-        j=0
-        while j<3:
+    while i < 3:
+        j = 0
+        while j < 3:
             if board[i][j] == M:
                 actionSet.append((i, j))
             j += 1
@@ -50,13 +48,14 @@ def actions(board):
 
 def move(board, action):
 
-    i=action[0]
-    j=action[1]
+    i = action[0]
+    j = action[1]
     board[i][j] = player(board)
     return board
 
+
 def winner(board):
-    winner = None;
+    winner = None
     if (board[0][0] == X) and (board[0][1] == X) and (board[0][2] == X):
         winner = X
     if (board[0][0] == O) and (board[0][1] == O) and (board[0][2] == O):
@@ -100,13 +99,13 @@ def winner(board):
 
 
 def terminal(board):
-    i=0
-    j=0
+    i = 0
+    j = 0
     full = True
     end = False
-    while i<3:
-        j=0
-        while j<3:
+    while i < 3:
+        j = 0
+        while j < 3:
             if board[i][j] == M:
                 full = False
             j += 1
@@ -134,12 +133,11 @@ def utility(board):
 
     return u
 
+
 def maximiser(board):
     v = -2
 
-
     if terminal(board):
-
 
         return utility(board)
 
@@ -153,9 +151,7 @@ def maximiser(board):
 def minimiser(board):
     v = 2
 
-
     if terminal(board):
-
 
         return utility(board)
 
@@ -174,7 +170,6 @@ def minimax(board):
         print("X playing")
         for action in actions(copy.deepcopy(board)):
 
-
             u = minimiser(move(copy.deepcopy(board), action))
 
             if u > max:
@@ -184,7 +179,6 @@ def minimax(board):
             elif u == max:
                 moveSet.append(action)
 
-
     elif player(board) == O:
         print(" O playing")
         for action in actions(copy.deepcopy(board)):
@@ -193,13 +187,9 @@ def minimax(board):
 
             if u < min:
                 min = u
-                moveSet= []
+                moveSet = []
                 moveSet.append(action)
             elif u == min:
                 moveSet.append(action)
 
     return moveSet
-
-
-
-
