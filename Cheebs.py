@@ -1,4 +1,4 @@
-#bot.py
+# bot.py
 import os
 import discord
 import praw
@@ -7,17 +7,21 @@ import PlayTTT
 import copy
 import random
 from dotenv import load_dotenv
+
 load_dotenv()
 
 client = discord.Client()
 
 
-TOKEN = os.environ.get('bot-token')
+TOKEN = os.environ.get("bot-token")
 
 
-reddit = praw.Reddit(client_id=os.environ.get('client-id'),
-                     client_secret=os.environ.get('client-secret'),
-                     user_agent=os.environ.get('user-agent'))
+reddit = praw.Reddit(
+    client_id=os.environ.get("client-id"),
+    client_secret=os.environ.get("client-secret"),
+    user_agent=os.environ.get("user-agent"),
+)
+
 
 @client.event
 async def on_message(message):
@@ -25,44 +29,56 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    print(message.author.display_name+" : "+message.content)
+    print(message.author.display_name + " : " + message.content)
 
-    if message.content.startswith('$help'):
-        await message.channel.send("Cheebs here, I'm kinda new and don't know nobody, for now I just fetch reddit posts and play TicTacToe, use $reddithelp to learn more and $tictactoe to play")
+    if message.content.startswith("$help"):
+        await message.channel.send(
+            "Cheebs here, I'm kinda new and don't know nobody, for now I just fetch reddit posts and play TicTacToe, use $reddithelp to learn more and $tictactoe to play"
+        )
 
-    if message.content.startswith("$reddithelp"):
-        helperText="So,%s you need help, and where do you come? Crawling back to me. \n Here's the lowdown - \n $reddit {subredditname} {top/hot/new/rising/controversial/gilded} {number of posts} \n $reddit {subredditname} {topnth/hotnth/newnth/risingnth/controversialnth/gildednth} {post at nth position}"%(message.author.mention)
+    elif message.content.startswith("$reddithelp"):
+        helperText = (
+            "So,%s you need help, and where do you come? Crawling back to me. \n Here's the lowdown - \n $reddit {subredditname} {top/hot/new/rising/controversial/gilded} {number of posts} \n $reddit {subredditname} {topnth/hotnth/newnth/risingnth/controversialnth/gildednth} {post at nth position}"
+            % (message.author.mention)
+        )
         await message.channel.send(helperText)
 
-#reddit stuff
+    # reddit stuff
 
-    if message.content.startswith("$reddit") and (not message.content=="$reddithelp"):
+    elif message.content.startswith("$reddit"):
 
-        reddit = praw.Reddit(client_id=os.environ.get('client-id'),
-                     client_secret=os.environ.get('client-secret'),
-                     user_agent=os.environ.get('user-agent'))
+        reddit = praw.Reddit(
+            client_id=os.environ.get("client-id"),
+            client_secret=os.environ.get("client-secret"),
+            user_agent=os.environ.get("user-agent"),
+        )
         sub = "cats"
-        type="top"
-        lim=1;
+        type = "top"
+        lim = 1
         li = message.content.split()
         print(li[0])
-        if(len(li)>1):
+        if len(li) > 1:
             print(li[1])
-            sub=li[1]
-        if(len(li)>2):
+            sub = li[1]
+        if len(li) > 2:
             print(li[2])
-            type=li[2]
-        if(len(li)>3):
+            type = li[2]
+        if len(li) > 3:
             print(li[3])
-            lim=int(li[3])
+            lim = int(li[3])
 
-        if type=="top":
+        if type == "top":
             for submission in reddit.subreddit(sub).top(limit=lim):
-                if (len(submission.selftext) <= 2000):
-                    embed = discord.Embed(title=submission.title, description=submission.selftext)
+                if len(submission.selftext) <= 2000:
+                    embed = discord.Embed(
+                        title=submission.title, description=submission.selftext
+                    )
                 else:
-                    embed = discord.Embed(title=submission.title,
-                                          description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                    embed = discord.Embed(
+                        title=submission.title,
+                        description="That post is way too long and I'm not typing out all of it, here's a link - "
+                        + submission.shortlink,
+                    )
 
                 imgFlag = not submission.is_self
                 if imgFlag:
@@ -71,13 +87,18 @@ async def on_message(message):
                 print(submission.shortlink)
                 await message.channel.send(embed=embed)
 
-        if type=="new":
+        if type == "new":
             for submission in reddit.subreddit(sub).new(limit=lim):
-                if (len(submission.selftext) <= 2000):
-                    embed = discord.Embed(title=submission.title, description=submission.selftext)
+                if len(submission.selftext) <= 2000:
+                    embed = discord.Embed(
+                        title=submission.title, description=submission.selftext
+                    )
                 else:
-                    embed = discord.Embed(title=submission.title,
-                                          description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                    embed = discord.Embed(
+                        title=submission.title,
+                        description="That post is way too long and I'm not typing out all of it, here's a link - "
+                        + submission.shortlink,
+                    )
 
                 imgFlag = not submission.is_self
                 if imgFlag:
@@ -86,13 +107,18 @@ async def on_message(message):
                 print(submission.shortlink)
                 await message.channel.send(embed=embed)
 
-        if type=="hot":
+        if type == "hot":
             for submission in reddit.subreddit(sub).hot(limit=lim):
-                if (len(submission.selftext) <= 2000):
-                    embed = discord.Embed(title=submission.title, description=submission.selftext)
+                if len(submission.selftext) <= 2000:
+                    embed = discord.Embed(
+                        title=submission.title, description=submission.selftext
+                    )
                 else:
-                    embed = discord.Embed(title=submission.title,
-                                          description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                    embed = discord.Embed(
+                        title=submission.title,
+                        description="That post is way too long and I'm not typing out all of it, here's a link - "
+                        + submission.shortlink,
+                    )
 
                 imgFlag = not submission.is_self
                 if imgFlag:
@@ -101,14 +127,18 @@ async def on_message(message):
                 print(submission.shortlink)
                 await message.channel.send(embed=embed)
 
-
-        if type=="topnth":
+        if type == "topnth":
             submission = list(reddit.subreddit(sub).top(limit=lim))[lim - 1]
-            if (len(submission.selftext) <= 2000):
-                embed = discord.Embed(title=submission.title, description=submission.selftext)
+            if len(submission.selftext) <= 2000:
+                embed = discord.Embed(
+                    title=submission.title, description=submission.selftext
+                )
             else:
-                embed = discord.Embed(title=submission.title,
-                                    description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                embed = discord.Embed(
+                    title=submission.title,
+                    description="That post is way too long and I'm not typing out all of it, here's a link - "
+                    + submission.shortlink,
+                )
 
             imgFlag = not submission.is_self
             if imgFlag:
@@ -117,13 +147,18 @@ async def on_message(message):
             print(submission.shortlink)
             await message.channel.send(embed=embed)
 
-        if type=="newnth":
+        if type == "newnth":
             submission = list(reddit.subreddit(sub).new(limit=lim))[lim - 1]
-            if (len(submission.selftext) <= 2000):
-                embed = discord.Embed(title=submission.title, description=submission.selftext)
+            if len(submission.selftext) <= 2000:
+                embed = discord.Embed(
+                    title=submission.title, description=submission.selftext
+                )
             else:
-                embed = discord.Embed(title=submission.title,
-                                    description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                embed = discord.Embed(
+                    title=submission.title,
+                    description="That post is way too long and I'm not typing out all of it, here's a link - "
+                    + submission.shortlink,
+                )
 
             imgFlag = not submission.is_self
             if imgFlag:
@@ -132,13 +167,18 @@ async def on_message(message):
             print(submission.shortlink)
             await message.channel.send(embed=embed)
 
-        if type=="hotnth":
-            submission = list(reddit.subreddit(sub).hot(limit=lim))[lim-1]
-            if (len(submission.selftext) <= 2000):
-                embed = discord.Embed(title=submission.title, description=submission.selftext)
+        if type == "hotnth":
+            submission = list(reddit.subreddit(sub).hot(limit=lim))[lim - 1]
+            if len(submission.selftext) <= 2000:
+                embed = discord.Embed(
+                    title=submission.title, description=submission.selftext
+                )
             else:
-                embed = discord.Embed(title=submission.title,
-                description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                embed = discord.Embed(
+                    title=submission.title,
+                    description="That post is way too long and I'm not typing out all of it, here's a link - "
+                    + submission.shortlink,
+                )
 
             imgFlag = not submission.is_self
             if imgFlag:
@@ -147,13 +187,18 @@ async def on_message(message):
             print(submission.shortlink)
             await message.channel.send(embed=embed)
 
-        if type=="rising":
+        if type == "rising":
             for submission in reddit.subreddit(sub).rising(limit=lim):
-                if (len(submission.selftext) <= 2000):
-                    embed = discord.Embed(title=submission.title, description=submission.selftext)
+                if len(submission.selftext) <= 2000:
+                    embed = discord.Embed(
+                        title=submission.title, description=submission.selftext
+                    )
                 else:
-                    embed = discord.Embed(title=submission.title,
-                                          description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                    embed = discord.Embed(
+                        title=submission.title,
+                        description="That post is way too long and I'm not typing out all of it, here's a link - "
+                        + submission.shortlink,
+                    )
 
                 imgFlag = not submission.is_self
                 if imgFlag:
@@ -162,13 +207,18 @@ async def on_message(message):
                 print(submission.shortlink)
                 await message.channel.send(embed=embed)
 
-        if type=="controversial":
+        if type == "controversial":
             for submission in reddit.subreddit(sub).controversial(limit=lim):
-                if (len(submission.selftext) <= 2000):
-                    embed = discord.Embed(title=submission.title, description=submission.selftext)
+                if len(submission.selftext) <= 2000:
+                    embed = discord.Embed(
+                        title=submission.title, description=submission.selftext
+                    )
                 else:
-                    embed = discord.Embed(title=submission.title,
-                                          description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                    embed = discord.Embed(
+                        title=submission.title,
+                        description="That post is way too long and I'm not typing out all of it, here's a link - "
+                        + submission.shortlink,
+                    )
 
                 imgFlag = not submission.is_self
                 if imgFlag:
@@ -177,13 +227,18 @@ async def on_message(message):
                 print(submission.shortlink)
                 await message.channel.send(embed=embed)
 
-        if type=="risingnth":
-            submission = list(reddit.subreddit(sub).rising(limit=None))[lim-1]
-            if (len(submission.selftext) <= 2000):
-                embed = discord.Embed(title=submission.title, description=submission.selftext)
+        if type == "risingnth":
+            submission = list(reddit.subreddit(sub).rising(limit=None))[lim - 1]
+            if len(submission.selftext) <= 2000:
+                embed = discord.Embed(
+                    title=submission.title, description=submission.selftext
+                )
             else:
-                embed = discord.Embed(title=submission.title,
-                description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                embed = discord.Embed(
+                    title=submission.title,
+                    description="That post is way too long and I'm not typing out all of it, here's a link - "
+                    + submission.shortlink,
+                )
 
             imgFlag = not submission.is_self
             if imgFlag:
@@ -192,13 +247,18 @@ async def on_message(message):
             print(submission.shortlink)
             await message.channel.send(embed=embed)
 
-        if type=="controversialnth":
-            submission = list(reddit.subreddit(sub).controversial(limit=None))[lim-1]
-            if (len(submission.selftext) <= 2000):
-                embed = discord.Embed(title=submission.title, description=submission.selftext)
+        if type == "controversialnth":
+            submission = list(reddit.subreddit(sub).controversial(limit=None))[lim - 1]
+            if len(submission.selftext) <= 2000:
+                embed = discord.Embed(
+                    title=submission.title, description=submission.selftext
+                )
             else:
-                embed = discord.Embed(title=submission.title,
-                description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                embed = discord.Embed(
+                    title=submission.title,
+                    description="That post is way too long and I'm not typing out all of it, here's a link - "
+                    + submission.shortlink,
+                )
 
             imgFlag = not submission.is_self
             if imgFlag:
@@ -207,13 +267,18 @@ async def on_message(message):
             print(submission.shortlink)
             await message.channel.send(embed=embed)
 
-        if type=="gilded":
+        if type == "gilded":
             for submission in reddit.subreddit(sub).gilded(limit=lim):
-                if (len(submission.selftext) <= 2000):
-                    embed = discord.Embed(title=submission.title, description=submission.selftext)
+                if len(submission.selftext) <= 2000:
+                    embed = discord.Embed(
+                        title=submission.title, description=submission.selftext
+                    )
                 else:
-                    embed = discord.Embed(title=submission.title,
-                                          description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                    embed = discord.Embed(
+                        title=submission.title,
+                        description="That post is way too long and I'm not typing out all of it, here's a link - "
+                        + submission.shortlink,
+                    )
 
                 imgFlag = not submission.is_self
                 if imgFlag:
@@ -222,13 +287,18 @@ async def on_message(message):
                 print(submission.shortlink)
                 await message.channel.send(embed=embed)
 
-        if type=="gildednth":
-            submission = list(reddit.subreddit(sub).gilded(limit=None))[lim-1]
-            if (len(submission.selftext) <= 2000):
-                embed = discord.Embed(title=submission.title, description=submission.selftext)
+        if type == "gildednth":
+            submission = list(reddit.subreddit(sub).gilded(limit=None))[lim - 1]
+            if len(submission.selftext) <= 2000:
+                embed = discord.Embed(
+                    title=submission.title, description=submission.selftext
+                )
             else:
-                embed = discord.Embed(title=submission.title,
-                description="That post is way too long and I'm not typing out all of it, here's a link - " + submission.shortlink)
+                embed = discord.Embed(
+                    title=submission.title,
+                    description="That post is way too long and I'm not typing out all of it, here's a link - "
+                    + submission.shortlink,
+                )
 
             imgFlag = not submission.is_self
             if imgFlag:
@@ -237,7 +307,7 @@ async def on_message(message):
             print(submission.shortlink)
             await message.channel.send(embed=embed)
 
-    #TicTacToe
+    # TicTacToe
     global TheBoard
     X = "X"
     O = "O"
@@ -255,14 +325,17 @@ async def on_message(message):
         inp = PlayTTT.conv(user)
         p = int(inp[0])
         q = int(inp[1])
-        if not PlayTTT.canplay(copy.deepcopy(TheBoard),p ,q):
+        if not PlayTTT.canplay(copy.deepcopy(TheBoard), p, q):
             await message.channel.send("Illegal")
             return
         TheBoard[p][q] = X
 
         end = TTTAI.terminal(copy.deepcopy(TheBoard))
         if end:
-            embed = discord.Embed(title="Tic Tac Toe", description=" "+PlayTTT.dispdiscy(copy.deepcopy(TheBoard)))
+            embed = discord.Embed(
+                title="Tic Tac Toe",
+                description=" " + PlayTTT.dispdiscy(copy.deepcopy(TheBoard)),
+            )
             embed.colour = random.randint(0, 16777215)
             await message.channel.send(embed=embed)
             if TTTAI.winner(TheBoard) == X:
@@ -281,7 +354,10 @@ async def on_message(message):
         print(PlayTTT.dispdiscy(copy.deepcopy(TheBoard)))
         end = TTTAI.terminal(copy.deepcopy(TheBoard))
         if end:
-            embed = discord.Embed(title="Tic Tac Toe", description=" "+PlayTTT.dispdiscy(copy.deepcopy(TheBoard)))
+            embed = discord.Embed(
+                title="Tic Tac Toe",
+                description=" " + PlayTTT.dispdiscy(copy.deepcopy(TheBoard)),
+            )
             embed.colour = random.randint(0, 16777215)
             await message.channel.send(embed=embed)
             if TTTAI.winner(TheBoard) == X:
@@ -292,22 +368,17 @@ async def on_message(message):
                 whee = "Tie"
             await message.channel.send(whee)
             return
-        embed = discord.Embed(title="Tic Tac Toe", description=" "+PlayTTT.dispdiscy(copy.deepcopy(TheBoard)))
+        embed = discord.Embed(
+            title="Tic Tac Toe",
+            description=" " + PlayTTT.dispdiscy(copy.deepcopy(TheBoard)),
+        )
         embed.colour = random.randint(0, 16777215)
         await message.channel.send(embed=embed)
 
 
-
-
-
-
-
-
-
-
-
 @client.event
 async def on_ready():
-    print(f'{client.user} has connected to {client.guilds[0].name}!')
+    print(f"{client.user} has connected to {client.guilds[0].name}!")
+
 
 client.run(TOKEN)
