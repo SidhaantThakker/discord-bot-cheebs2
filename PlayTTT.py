@@ -26,39 +26,16 @@ def display(board):
 
 
 def conv(x):
-
-    inp = ""
-
-    if x == "0":
-        inp = "00"
-    if x == "1":
-        inp = "01"
-    if x == "2":
-        inp = "02"
-    if x == "3":
-        inp = "10"
-    if x == "4":
-        inp = "11"
-    if x == "5":
-        inp = "12"
-    if x == "6":
-        inp = "20"
-    if x == "7":
-        inp = "21"
-    if x == "8":
-        inp = "22"
-    if len(x) == 2:
-        inp = x
-
-    return inp
+    if x >= 10:
+        return x
+    else:
+        return (x // 3, x % 3)
 
 
 if __name__ == "__main__":
     while not end:
         user = input("Enter Move")
-        inp = conv(user)
-        p = int(inp[0])
-        q = int(inp[1])
+        p, q = conv(int(user))
         b[p][q] = X
         end = TTTAI.terminal(copy.deepcopy(b))
         if end:
