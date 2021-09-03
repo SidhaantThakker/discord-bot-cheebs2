@@ -67,228 +67,26 @@ async def on_message(message):
             print(li[3])
             lim = int(li[3])
 
-        if type == "top":
-            for submission in reddit.subreddit(sub).top(limit=lim):
-                if len(submission.selftext) <= 2000:
-                    embed = discord.Embed(
-                        title=submission.title, description=submission.selftext
-                    )
-                else:
-                    embed = discord.Embed(
-                        title=submission.title,
-                        description="That post is way too long and I'm not typing out all of it, here's a link - "
-                        + submission.shortlink,
-                    )
+        submission_list = (
+            reddit.subreddit(sub).top(limit=lim)
+            if type.startwith("top")
+            else reddit.subreddit(sub).new(limit=lim)
+            if type.startwith("new")
+            else reddit.subreddit(sub).hot(limit=lim)
+            if type.startwith("hot")
+            else reddit.subreddit(sub).rising(limit=lim)
+            if type.startwith("rising")
+            else reddit.subreddit(sub).controversial(limit=lim)
+            if type.startwith("controversial")
+            else reddit.subreddit(sub).gilded(limit=lim)
+            if type.startwith("gilded")
+            else []
+        )
 
-                imgFlag = not submission.is_self
-                if imgFlag:
-                    embed.set_image(url=submission.url)
+        if type.endswith("nth"):
+            submission_list = [list(submission_list)[lim - 1]]
 
-                print(submission.shortlink)
-                await message.channel.send(embed=embed)
-
-        if type == "new":
-            for submission in reddit.subreddit(sub).new(limit=lim):
-                if len(submission.selftext) <= 2000:
-                    embed = discord.Embed(
-                        title=submission.title, description=submission.selftext
-                    )
-                else:
-                    embed = discord.Embed(
-                        title=submission.title,
-                        description="That post is way too long and I'm not typing out all of it, here's a link - "
-                        + submission.shortlink,
-                    )
-
-                imgFlag = not submission.is_self
-                if imgFlag:
-                    embed.set_image(url=submission.url)
-
-                print(submission.shortlink)
-                await message.channel.send(embed=embed)
-
-        if type == "hot":
-            for submission in reddit.subreddit(sub).hot(limit=lim):
-                if len(submission.selftext) <= 2000:
-                    embed = discord.Embed(
-                        title=submission.title, description=submission.selftext
-                    )
-                else:
-                    embed = discord.Embed(
-                        title=submission.title,
-                        description="That post is way too long and I'm not typing out all of it, here's a link - "
-                        + submission.shortlink,
-                    )
-
-                imgFlag = not submission.is_self
-                if imgFlag:
-                    embed.set_image(url=submission.url)
-
-                print(submission.shortlink)
-                await message.channel.send(embed=embed)
-
-        if type == "topnth":
-            submission = list(reddit.subreddit(sub).top(limit=lim))[lim - 1]
-            if len(submission.selftext) <= 2000:
-                embed = discord.Embed(
-                    title=submission.title, description=submission.selftext
-                )
-            else:
-                embed = discord.Embed(
-                    title=submission.title,
-                    description="That post is way too long and I'm not typing out all of it, here's a link - "
-                    + submission.shortlink,
-                )
-
-            imgFlag = not submission.is_self
-            if imgFlag:
-                embed.set_image(url=submission.url)
-
-            print(submission.shortlink)
-            await message.channel.send(embed=embed)
-
-        if type == "newnth":
-            submission = list(reddit.subreddit(sub).new(limit=lim))[lim - 1]
-            if len(submission.selftext) <= 2000:
-                embed = discord.Embed(
-                    title=submission.title, description=submission.selftext
-                )
-            else:
-                embed = discord.Embed(
-                    title=submission.title,
-                    description="That post is way too long and I'm not typing out all of it, here's a link - "
-                    + submission.shortlink,
-                )
-
-            imgFlag = not submission.is_self
-            if imgFlag:
-                embed.set_image(url=submission.url)
-
-            print(submission.shortlink)
-            await message.channel.send(embed=embed)
-
-        if type == "hotnth":
-            submission = list(reddit.subreddit(sub).hot(limit=lim))[lim - 1]
-            if len(submission.selftext) <= 2000:
-                embed = discord.Embed(
-                    title=submission.title, description=submission.selftext
-                )
-            else:
-                embed = discord.Embed(
-                    title=submission.title,
-                    description="That post is way too long and I'm not typing out all of it, here's a link - "
-                    + submission.shortlink,
-                )
-
-            imgFlag = not submission.is_self
-            if imgFlag:
-                embed.set_image(url=submission.url)
-
-            print(submission.shortlink)
-            await message.channel.send(embed=embed)
-
-        if type == "rising":
-            for submission in reddit.subreddit(sub).rising(limit=lim):
-                if len(submission.selftext) <= 2000:
-                    embed = discord.Embed(
-                        title=submission.title, description=submission.selftext
-                    )
-                else:
-                    embed = discord.Embed(
-                        title=submission.title,
-                        description="That post is way too long and I'm not typing out all of it, here's a link - "
-                        + submission.shortlink,
-                    )
-
-                imgFlag = not submission.is_self
-                if imgFlag:
-                    embed.set_image(url=submission.url)
-
-                print(submission.shortlink)
-                await message.channel.send(embed=embed)
-
-        if type == "controversial":
-            for submission in reddit.subreddit(sub).controversial(limit=lim):
-                if len(submission.selftext) <= 2000:
-                    embed = discord.Embed(
-                        title=submission.title, description=submission.selftext
-                    )
-                else:
-                    embed = discord.Embed(
-                        title=submission.title,
-                        description="That post is way too long and I'm not typing out all of it, here's a link - "
-                        + submission.shortlink,
-                    )
-
-                imgFlag = not submission.is_self
-                if imgFlag:
-                    embed.set_image(url=submission.url)
-
-                print(submission.shortlink)
-                await message.channel.send(embed=embed)
-
-        if type == "risingnth":
-            submission = list(reddit.subreddit(sub).rising(limit=None))[lim - 1]
-            if len(submission.selftext) <= 2000:
-                embed = discord.Embed(
-                    title=submission.title, description=submission.selftext
-                )
-            else:
-                embed = discord.Embed(
-                    title=submission.title,
-                    description="That post is way too long and I'm not typing out all of it, here's a link - "
-                    + submission.shortlink,
-                )
-
-            imgFlag = not submission.is_self
-            if imgFlag:
-                embed.set_image(url=submission.url)
-
-            print(submission.shortlink)
-            await message.channel.send(embed=embed)
-
-        if type == "controversialnth":
-            submission = list(reddit.subreddit(sub).controversial(limit=None))[lim - 1]
-            if len(submission.selftext) <= 2000:
-                embed = discord.Embed(
-                    title=submission.title, description=submission.selftext
-                )
-            else:
-                embed = discord.Embed(
-                    title=submission.title,
-                    description="That post is way too long and I'm not typing out all of it, here's a link - "
-                    + submission.shortlink,
-                )
-
-            imgFlag = not submission.is_self
-            if imgFlag:
-                embed.set_image(url=submission.url)
-
-            print(submission.shortlink)
-            await message.channel.send(embed=embed)
-
-        if type == "gilded":
-            for submission in reddit.subreddit(sub).gilded(limit=lim):
-                if len(submission.selftext) <= 2000:
-                    embed = discord.Embed(
-                        title=submission.title, description=submission.selftext
-                    )
-                else:
-                    embed = discord.Embed(
-                        title=submission.title,
-                        description="That post is way too long and I'm not typing out all of it, here's a link - "
-                        + submission.shortlink,
-                    )
-
-                imgFlag = not submission.is_self
-                if imgFlag:
-                    embed.set_image(url=submission.url)
-
-                print(submission.shortlink)
-                await message.channel.send(embed=embed)
-
-        if type == "gildednth":
-            submission = list(reddit.subreddit(sub).gilded(limit=None))[lim - 1]
+        for submission in submission_list:
             if len(submission.selftext) <= 2000:
                 embed = discord.Embed(
                     title=submission.title, description=submission.selftext
@@ -314,7 +112,7 @@ async def on_message(message):
     M = None
     whee = ""
     end = False
-    intro = "Tic Tac Toe board initialized \n start messages directly with $move, and enter move as follows \n use 0, 1, 2, 3, 4 ... \n or 00, 01, 02, 10, 11 ..."
+    intro = "Tic Tac Toe board initialized \n start messages directly with $move, and enter move as follows \n use 1, 2, 3, 4, 5 ... \n or 11, 12, 13, 21, 22 ..."
 
     if message.content.startswith("$tictactoe"):
         TheBoard = TTTAI.ini_board()
@@ -322,9 +120,7 @@ async def on_message(message):
 
     if message.content.startswith("$move"):
         user = message.content[6:8]
-        inp = PlayTTT.conv(user)
-        p = int(inp[0])
-        q = int(inp[1])
+        p, q = PlayTTT.conv(int(user))
         if not PlayTTT.canplay(copy.deepcopy(TheBoard), p, q):
             await message.channel.send("Illegal")
             return
