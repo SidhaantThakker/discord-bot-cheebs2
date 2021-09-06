@@ -107,9 +107,9 @@ async def on_message(message):
 
     # TicTacToe
     global TheBoard
-    X = "X"
-    O = "O"
-    M = None
+    X = 1
+    O = -1
+    M = 0
     whee = ""
     end = False
     intro = "Tic Tac Toe board initialized \n start messages directly with $move, and enter move as follows \n use 1, 2, 3, 4, 5 ... \n or 11, 12, 13, 21, 22 ..."
@@ -134,9 +134,10 @@ async def on_message(message):
             )
             embed.colour = random.randint(0, 16777215)
             await message.channel.send(embed=embed)
-            if TTTAI.winner(TheBoard) == X:
+            winner = TTTAI.winner(TheBoard)
+            if winner == X:
                 whee = "X wins"
-            elif TTTAI.winner(TheBoard) == O:
+            elif winner == O:
                 whee = "O wins"
             else:
                 whee = "Tie"
@@ -156,9 +157,10 @@ async def on_message(message):
             )
             embed.colour = random.randint(0, 16777215)
             await message.channel.send(embed=embed)
-            if TTTAI.winner(TheBoard) == X:
+            winner = TTTAI.winner(TheBoard)
+            if winner == X:
                 whee = "X wins"
-            elif TTTAI.winner(TheBoard) == O:
+            elif winner == O:
                 whee = "O wins"
             else:
                 whee = "Tie"

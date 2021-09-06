@@ -4,21 +4,15 @@ import random
 
 end = False
 b = TTTAI.ini_board()
-X = "X"
-O = "O"
-M = None
+X = 1
+O = -1
+M = 0
 
 
 def display(board):
-    i = 0
-    j = 0
-    while i < 3:
-        j = 0
-        while j < 3:
-            if board[i][j] == M:
-                board[i][j] = " "
-            j += 1
-        i += 1
+    for i in range(3):
+        for j in range(3):
+            board[i][j] = "X" if board[i][j] == X else "O" if board[i][j] == O else " "
 
     print(board[0])
     print(board[1])
@@ -39,26 +33,31 @@ if __name__ == "__main__":
         p, q = conv(int(user))
         b[p][q] = X
         end = TTTAI.terminal(copy.deepcopy(b))
+
         if end:
             display(copy.deepcopy(b))
-            if TTTAI.winner(b) == X:
+            winner = TTTAI.winner(b)
+
+            if winner == X:
                 print("X wins")
-            elif TTTAI.winner(b) == O:
+            elif winner == O:
                 print("O wins")
             else:
                 print("Tie")
             break
+
         AI = random.choice(TTTAI.minimax(copy.deepcopy(b)))
-        p = AI[0]
-        q = AI[1]
-        b[p][q] = O
+        b[AI[0]][AI[1]] = O
         display(copy.deepcopy(b))
         end = TTTAI.terminal(copy.deepcopy(b))
+
         if end:
             display(copy.deepcopy(b))
-            if TTTAI.winner(b) == X:
+            winner = TTTAI.winner(b)
+
+            if winner == X:
                 print("X wins")
-            elif TTTAI.winner(b) == O:
+            elif winner == O:
                 print("O wins")
             else:
                 print("Tie")
@@ -66,38 +65,19 @@ if __name__ == "__main__":
 
 
 def dispdiscy(board):
-    i = 0
-    j = 0
     output = ""
-    while i < 3:
-        j = 0
-        while j < 3:
-            if board[i][j] == M:
-                board[i][j] = "N"
-            j += 1
-        i += 1
 
-    i = 0
-    j = 0
+    for i in range(3):
+        for j in range(3):
+            output += "X" if board[i][j] == X else "O" if board[i][j] == O else "N"
 
-    while i < 3:
-        j = 0
-        while j < 3:
             if j < 2:
-                output = output + board[i][j] + "|"
-            else:
-                output = output + board[i][j]
-            j += 1
+                output += "|"
 
-        output = output + "\n"
-        i += 1
+        output += "\n"
 
     return output
 
 
 def canplay(board, p, q):
-
-    if board[p][q] == M:
-        return True
-    else:
-        return False
+    return board[p][q] == M
