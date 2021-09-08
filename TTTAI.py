@@ -16,7 +16,7 @@ def player(board):
 
     for i in range(3):
         for j in range(3):
-            if board[i][j] != 0:
+            if board[i][j] != M:
                 k += 1
 
     if k % 2 == 0:
@@ -50,9 +50,11 @@ def winner(board):
            -1 = O if O has won,
             0 = M if neither has won (yet).
     """
-    row = col = d1 = d2 = 0
+    d1 = d2 = 0
 
     for i in range(3):
+        row = col = 0
+        
         for j in range(3):
             row += board[i][j]
             col += board[j][i]
