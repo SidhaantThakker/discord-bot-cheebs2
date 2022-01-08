@@ -69,17 +69,17 @@ async def on_message(message):
 
         submission_list = (
             reddit.subreddit(sub).top(limit=lim)
-            if type.startwith("top")
+            if type.startswith("top")
             else reddit.subreddit(sub).new(limit=lim)
-            if type.startwith("new")
+            if type.startswith("new")
             else reddit.subreddit(sub).hot(limit=lim)
-            if type.startwith("hot")
+            if type.startswith("hot")
             else reddit.subreddit(sub).rising(limit=lim)
-            if type.startwith("rising")
+            if type.startswith("rising")
             else reddit.subreddit(sub).controversial(limit=lim)
-            if type.startwith("controversial")
+            if type.startswith("controversial")
             else reddit.subreddit(sub).gilded(limit=lim)
-            if type.startwith("gilded")
+            if type.startswith("gilded")
             else []
         )
 
